@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Business.Model\Business.Model.csproj" />
+    <ProjectReference Include="..\Business.Application\Business.Application.csproj" />
   </ItemGroup>
 
 </Project>

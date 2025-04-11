@@ -3,7 +3,9 @@ using Business.Model.Data;
 using Business.Model.Entities.Organizations;
 using Business.Model.Entities.Events;
 using Business.Model.Entities.Events.Enums;
-using System.Collections.Generic;
+using Business.Application.Services.Users.Dtos;
+using Business.Application.Services.Users;
+using Business.Model.Entities.Users;
 
 namespace Storage.Mockup.DbSeed;
 
@@ -13,6 +15,20 @@ public class ArtBookingDbSeeder
     {
         using var scope = serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ArtBookingDbContext>();
+
+        if (!context.Users.Any())
+        {
+            var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+            userService.CreateUser(new CreateUserDto
+            {
+                Username = "admin",
+                Email = "admin@admin.com",
+                Password = "admin01",
+                Role = UserRole.MasterAdmin,
+                FirstName = "Admin",
+                LastName = "Admin",
+            });
+        }
 
         // Check if data already exists to avoid duplicates
         // For in memory database not necessary by for true database scenario is better to check.

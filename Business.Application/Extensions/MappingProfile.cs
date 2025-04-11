@@ -3,6 +3,8 @@ using Business.Application.DTOs.Organizations;
 using Business.Application.DTOs.Events;
 using Business.Model.Entities.Organizations;
 using Business.Model.Entities.Events;
+using Business.Model.Entities.Users;
+using Business.Application.Services.Users.Dtos;
 
 namespace Business.Application.Extensions
 {
@@ -21,6 +23,9 @@ namespace Business.Application.Extensions
 
             // Map from ArtEvent entity to ArtEventDto
             CreateMap<ArtEvent, ArtEventDto>();
+
+            // Map from User entity to UserDto
+            CreateMap<User, UserDto>();
         }
     }
 }

@@ -15,6 +15,10 @@ namespace Business.Model.Entities.Users
         public int UserId { get; set; }
 
         /// <summary>
+        /// User's username (used for login)
+        /// <summary>
+        public string Username { get; set; } = null!;
+
         /// User's email address (used for login)
         /// </summary>
         public string Email { get; set; } = null!;
