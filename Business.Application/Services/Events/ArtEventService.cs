@@ -3,9 +3,7 @@ using Business.Model.Data;
 using Business.Model.Entities.Events;
 using Xtech.Common.Pagination;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
+using Business.Application.UserIdentity;
 
 namespace Business.Application.Services.Events
 {
@@ -13,17 +11,22 @@ namespace Business.Application.Services.Events
     {
         private readonly ArtBookingDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IUserContext _userContext;
 
-        public ArtEventService(ArtBookingDbContext dbContext, IMapper mapper)
+        public ArtEventService(ArtBookingDbContext dbContext, IMapper mapper, IUserContext userContext)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _userContext = userContext;
         }
 
         public ArtEventDto CreateEvent(CreateArtEventDto eventDto, int? artOrganizationId = null)
         {
             var artEvent = _mapper.Map<ArtEvent>(eventDto);
             artEvent.CreatedAt = DateTime.UtcNow;
+            artEvent.CreatedById = _userContext.UserId;
+            artEvent.UpdatedAt = DateTime.UtcNow;
+            artEvent.UpdatedById = _userContext.UserId;
             artEvent.ArtOrganizationId = artOrganizationId ?? 0; // Set to 0 if null
 
             _dbContext.ArtEvents.Add(artEvent);
@@ -108,6 +111,8 @@ namespace Business.Application.Services.Events
             }
 
             _mapper.Map(eventDto, existingEvent);
+            existingEvent.UpdatedAt = DateTime.UtcNow;
+            existingEvent.UpdatedById = _userContext.UserId;
             _dbContext.SaveChanges();
 
             return _mapper.Map<ArtEventDto>(existingEvent);

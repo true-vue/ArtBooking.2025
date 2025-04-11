@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Business.Application.UserIdentity;
+using Backend.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,6 +73,10 @@ builder.Services.AddDbContext<ArtBookingDbContext>(o => o.UseInMemoryDatabase("A
 
 // Register application services
 builder.Services.AddArtBookingBusinessLayer();
+
+// Register UserContext
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUserContext, UserContext>();
 
 var app = builder.Build();
 

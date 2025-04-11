@@ -1,11 +1,9 @@
 using Business.Model.Data;
 using Business.Model.Entities.Organizations;
 using Xtech.Common.Pagination;
-using System;
-using System.Linq;
 using Business.Application.DTOs.Organizations;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+using Business.Application.UserIdentity;
 
 namespace Business.Application.Services.Organizations
 {
@@ -16,16 +14,13 @@ namespace Business.Application.Services.Organizations
     {
         private readonly ArtBookingDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IUserContext _userContext;
 
-        /// <summary>
-        /// Static user ID for mocking the current user
-        /// </summary>
-        private static readonly int UserId = 1;
-
-        public ArtOrganizationService(ArtBookingDbContext dbContext, IMapper mapper)
+        public ArtOrganizationService(ArtBookingDbContext dbContext, IMapper mapper, IUserContext userContext)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _userContext = userContext;
         }
 
         /// <summary>
@@ -40,9 +35,9 @@ namespace Business.Application.Services.Organizations
 
             // Set creation and update properties
             organization.CreatedAt = DateTime.Now;
-            organization.CreatedById = UserId;
+            organization.CreatedById = _userContext.UserId;
             organization.UpdatedAt = DateTime.Now;
-            organization.UpdatedById = UserId;
+            organization.UpdatedById = _userContext.UserId;
 
             _dbContext.Add(organization);
             _dbContext.SaveChanges();
@@ -79,7 +74,7 @@ namespace Business.Application.Services.Organizations
 
             // Update audit fields
             existingOrganization.UpdatedAt = DateTime.UtcNow;
-            existingOrganization.UpdatedById = UserId;
+            existingOrganization.UpdatedById = _userContext.UserId;
 
             _dbContext.SaveChanges();
             return _mapper.Map<ArtOrganizationDto>(existingOrganization);
