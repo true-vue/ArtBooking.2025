@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -7,8 +8,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business.Model", "Business.Model\Business.Model.csproj", "{A75F4054-8355-4A73-9B2D-FCC05C6F1641}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business.Application", "Business.Application\Business.Application.csproj", "{CF0596A0-A031-4CE0-9C6B-C000CB8BD755}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.Mockup.DbSeed", "Storage.Mockup.DbSeed\Storage.Mockup.DbSeed.csproj", "{B102FEDE-924D-4C26-96C1-54D4426C51E6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.InMemory", "Storage.InMemory\Storage.InMemory.csproj", "{C53958DC-4D51-4308-9106-24C217F4909C}"
 EndProject
@@ -30,10 +29,6 @@ Global
 		{CF0596A0-A031-4CE0-9C6B-C000CB8BD755}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF0596A0-A031-4CE0-9C6B-C000CB8BD755}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF0596A0-A031-4CE0-9C6B-C000CB8BD755}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B102FEDE-924D-4C26-96C1-54D4426C51E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B102FEDE-924D-4C26-96C1-54D4426C51E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B102FEDE-924D-4C26-96C1-54D4426C51E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B102FEDE-924D-4C26-96C1-54D4426C51E6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C53958DC-4D51-4308-9106-24C217F4909C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C53958DC-4D51-4308-9106-24C217F4909C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C53958DC-4D51-4308-9106-24C217F4909C}.Release|Any CPU.ActiveCfg = Release|Any CPU
