@@ -1,20 +1,20 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Business.Model.Data;
 using Business.Model.Entities.Organizations;
 using Business.Model.Entities.Events;
 using Business.Model.Entities.Events.Enums;
 using Business.Application.Services.Users.Dtos;
 using Business.Application.Services.Users;
 using Business.Model.Entities.Users;
+using Storage.InMemory;
 
-namespace Storage.Mockup.DbSeed;
+namespace Business.Application.Storage;
 
 public class ArtBookingDbSeeder
 {
     public static void SeedNow(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<ArtBookingDbContext>();
+        var context = scope.ServiceProvider.GetRequiredService<ArtBookingDbContextInMemory>();
 
         if (!context.Users.Any())
         {

@@ -1,8 +1,8 @@
-using Business.Model.Data;
 using Business.Model.Entities.Venues;
 using Xtech.Common.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Storage.InMemory;
 
 namespace Backend.Controllers;
 
@@ -11,9 +11,9 @@ namespace Backend.Controllers;
 [Route("api/[controller]")]
 public class VenueController : ControllerBase
 {
-    private readonly ArtBookingDbContext _dbContext;
+    private readonly ArtBookingDbContextInMemory _dbContext;
 
-    public VenueController(ArtBookingDbContext dbContext)
+    public VenueController(ArtBookingDbContextInMemory dbContext)
     {
         _dbContext = dbContext;
     }

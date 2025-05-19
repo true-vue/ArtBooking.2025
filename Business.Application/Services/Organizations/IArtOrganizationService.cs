@@ -36,5 +36,11 @@ namespace Business.Application.Services.Organizations
         /// <param name="listParams">List parameters including pagination, filters, and sorting</param>
         /// <returns>A paged list of art organization DTOs</returns>
         PagedList<ArtOrganizationDto> ListOrganizations(PagedListParams<ArtOrganizationFilters> listParams);
+
+        /// <summary>
+        /// Checks if there are any organizations in the database.
+        /// </summary>
+        /// <returns>True if organizations exist, otherwise false.</returns>
+        bool HasOrganizations();
     }
 }

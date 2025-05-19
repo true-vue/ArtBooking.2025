@@ -1,8 +1,8 @@
-using Business.Model.Data;
 using Business.Model.Entities.Users;
 using Business.Application.Services.Users.Dtos;
 using Microsoft.AspNetCore.Identity;
 using Business.Application.UserIdentity;
+using Storage.InMemory;
 
 namespace Business.Application.Services.Users;
 
@@ -11,7 +11,7 @@ namespace Business.Application.Services.Users;
 /// </summary>
 public class UserService : IUserService
 {
-    private readonly ArtBookingDbContext _dbContext;
+    private readonly ArtBookingDbContextInMemory _dbContext;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly IUserContext _userContext;
 
@@ -21,7 +21,7 @@ public class UserService : IUserService
     /// <param name="dbContext">The database context used for user validation.</param>
     /// <param name="passwordHasher">The password hasher used for hashing user passwords.</param>
     /// <param name="userContext">The user context used for tracking the current user.</param>
-    public UserService(ArtBookingDbContext dbContext, IPasswordHasher<User> passwordHasher, IUserContext userContext)
+    public UserService(ArtBookingDbContextInMemory dbContext, IPasswordHasher<User> passwordHasher, IUserContext userContext)
     {
         _dbContext = dbContext;
         _passwordHasher = passwordHasher;
@@ -80,5 +80,14 @@ public class UserService : IUserService
         _dbContext.SaveChanges();
 
         return user;
+    }
+
+    /// <summary>
+    /// Checks if there are any users in the system.
+    /// </summary>
+    /// <returns>True if there are users, false otherwise.</returns>
+    public bool HasUsers()
+    {
+        return _dbContext.Users.Any();
     }
 }

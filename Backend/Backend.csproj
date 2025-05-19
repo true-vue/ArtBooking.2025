@@ -8,13 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Business.Model\Business.Model.csproj" />
     <ProjectReference Include="..\Business.Application\Business.Application.csproj" />
+    <ProjectReference Include="..\Storage.InMemory\Storage.InMemory.csproj" />
     <ProjectReference Include="..\Storage.Mockup.DbSeed\Storage.Mockup.DbSeed.csproj" />
   </ItemGroup>
 

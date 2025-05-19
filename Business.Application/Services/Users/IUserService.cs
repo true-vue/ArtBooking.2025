@@ -23,4 +23,10 @@ public interface IUserService
     /// <returns>The created user.</returns>
     /// <exception cref="Exception">Thrown when a user with the same username or email already exists.</exception>
     User CreateUser(CreateUserDto createUserDto);
+
+    /// <summary>
+    /// Checks if there are any users in the system.
+    /// </summary>
+    /// <returns>True if users exist, otherwise false.</returns>
+    bool HasUsers();
 }

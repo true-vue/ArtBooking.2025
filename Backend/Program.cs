@@ -1,13 +1,12 @@
-using Business.Model.Data;
-using Microsoft.EntityFrameworkCore;
+using Storage.InMemory.Extensions;
 using Business.Application.Extensions;
-using Storage.Mockup.DbSeed;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Business.Application.UserIdentity;
 using Backend.Identity;
+using Business.Application.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,7 +68,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddDbContext<ArtBookingDbContext>(o => o.UseInMemoryDatabase("ArtBooking"));
+// Configure Entity Framework Core with InMemory database
+builder.Services.AddArtBookingStorageInMemory();
 
 // Register application services
 builder.Services.AddArtBookingBusinessLayer();

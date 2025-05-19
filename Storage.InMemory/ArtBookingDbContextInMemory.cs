@@ -6,11 +6,11 @@ using Business.Model.Entities.Users;
 using Business.Model.Entities.Venues;
 using Microsoft.EntityFrameworkCore;
 
-namespace Business.Model.Data;
+namespace Storage.InMemory;
 
-public class ArtBookingDbContext : DbContext
+public class ArtBookingDbContextInMemory : DbContext
 {
-    public ArtBookingDbContext(DbContextOptions<ArtBookingDbContext> options) : base(options)
+    public ArtBookingDbContextInMemory(DbContextOptions<ArtBookingDbContextInMemory> options) : base(options)
     {
 
     }

@@ -1,9 +1,9 @@
-using Business.Model.Data;
 using Business.Model.Entities.Users;
 using Microsoft.AspNetCore.Identity;
 using Business.Application.UserIdentity.Dtos;
 using AutoMapper;
 using Business.Application.Services.Users.Dtos;
+using Storage.InMemory;
 
 namespace Business.Application.UserIdentity;
 
@@ -12,11 +12,11 @@ namespace Business.Application.UserIdentity;
 /// </summary>
 public class UserIdentityService : IUserIdentityService
 {
-    private readonly ArtBookingDbContext _dbContext;
+    private readonly ArtBookingDbContextInMemory _dbContext;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly IMapper _mapper;
 
-    public UserIdentityService(ArtBookingDbContext dbContext, IPasswordHasher<User> passwordHasher, IMapper mapper)
+    public UserIdentityService(ArtBookingDbContextInMemory dbContext, IPasswordHasher<User> passwordHasher, IMapper mapper)
     {
         _dbContext = dbContext;
         _passwordHasher = passwordHasher;

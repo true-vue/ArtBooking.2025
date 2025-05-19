@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business.Application", "Bus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.Mockup.DbSeed", "Storage.Mockup.DbSeed\Storage.Mockup.DbSeed.csproj", "{B102FEDE-924D-4C26-96C1-54D4426C51E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.InMemory", "Storage.InMemory\Storage.InMemory.csproj", "{C53958DC-4D51-4308-9106-24C217F4909C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{B102FEDE-924D-4C26-96C1-54D4426C51E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B102FEDE-924D-4C26-96C1-54D4426C51E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B102FEDE-924D-4C26-96C1-54D4426C51E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C53958DC-4D51-4308-9106-24C217F4909C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C53958DC-4D51-4308-9106-24C217F4909C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C53958DC-4D51-4308-9106-24C217F4909C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C53958DC-4D51-4308-9106-24C217F4909C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

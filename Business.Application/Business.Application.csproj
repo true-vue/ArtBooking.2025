@@ -7,6 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business.Model\Business.Model.csproj" />
+    <ProjectReference Include="..\Storage.InMemory\Storage.InMemory.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />

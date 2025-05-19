@@ -1,9 +1,9 @@
-using Business.Model.Data;
 using Business.Model.Entities.Organizations;
 using Xtech.Common.Pagination;
 using Business.Application.DTOs.Organizations;
 using AutoMapper;
 using Business.Application.UserIdentity;
+using Storage.InMemory;
 
 namespace Business.Application.Services.Organizations
 {
@@ -12,11 +12,11 @@ namespace Business.Application.Services.Organizations
     /// </summary>
     public class ArtOrganizationService : IArtOrganizationService
     {
-        private readonly ArtBookingDbContext _dbContext;
+        private readonly ArtBookingDbContextInMemory _dbContext;
         private readonly IMapper _mapper;
         private readonly IUserContext _userContext;
 
-        public ArtOrganizationService(ArtBookingDbContext dbContext, IMapper mapper, IUserContext userContext)
+        public ArtOrganizationService(ArtBookingDbContextInMemory dbContext, IMapper mapper, IUserContext userContext)
         {
             _dbContext = dbContext;
             _mapper = mapper;
@@ -145,6 +145,15 @@ namespace Business.Application.Services.Organizations
                 pagedEntities.PageNumber,
                 pagedEntities.PageSize
             );
+        }
+
+        /// <summary>
+        /// Checks if there are any organizations present
+        /// </summary>
+        /// <returns>True if there are organizations, false otherwise</returns>
+        public bool HasOrganizations()
+        {
+            return _dbContext.ArtOrganizations.Any();
         }
     }
 }

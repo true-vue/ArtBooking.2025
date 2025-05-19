@@ -1,8 +1,8 @@
-using Business.Model.Data;
 using Business.Model.Entities.Users;
 using Xtech.Common.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Storage.InMemory;
 
 namespace Backend.Controllers;
 
@@ -11,9 +11,9 @@ namespace Backend.Controllers;
 [Route("api/[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly ArtBookingDbContext _dbContext;
+    private readonly ArtBookingDbContextInMemory _dbContext;
 
-    public UserController(ArtBookingDbContext dbContext)
+    public UserController(ArtBookingDbContextInMemory dbContext)
     {
         _dbContext = dbContext;
     }

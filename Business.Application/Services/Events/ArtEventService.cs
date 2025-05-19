@@ -1,19 +1,19 @@
 using Business.Application.DTOs.Events;
-using Business.Model.Data;
 using Business.Model.Entities.Events;
 using Xtech.Common.Pagination;
 using AutoMapper;
 using Business.Application.UserIdentity;
+using Storage.InMemory;
 
 namespace Business.Application.Services.Events
 {
     public class ArtEventService : IArtEventService
     {
-        private readonly ArtBookingDbContext _dbContext;
+        private readonly ArtBookingDbContextInMemory _dbContext;
         private readonly IMapper _mapper;
         private readonly IUserContext _userContext;
 
-        public ArtEventService(ArtBookingDbContext dbContext, IMapper mapper, IUserContext userContext)
+        public ArtEventService(ArtBookingDbContextInMemory dbContext, IMapper mapper, IUserContext userContext)
         {
             _dbContext = dbContext;
             _mapper = mapper;
