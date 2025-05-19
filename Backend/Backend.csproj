@@ -15,7 +15,6 @@
     <ProjectReference Include="..\Business.Model\Business.Model.csproj" />
     <ProjectReference Include="..\Business.Application\Business.Application.csproj" />
     <ProjectReference Include="..\Storage.InMemory\Storage.InMemory.csproj" />
-    <ProjectReference Include="..\Storage.Mockup.DbSeed\Storage.Mockup.DbSeed.csproj" />
   </ItemGroup>
 
 </Project>
