@@ -2,7 +2,7 @@ using Business.Model.Entities.Users;
 using Business.Application.Services.Users.Dtos;
 using Microsoft.AspNetCore.Identity;
 using Business.Application.UserIdentity;
-using Storage.InMemory;
+using Business.Application.Repositories;
 
 namespace Business.Application.Services.Users;
 
@@ -11,19 +11,22 @@ namespace Business.Application.Services.Users;
 /// </summary>
 public class UserService : IUserService
 {
-    private readonly ArtBookingDbContextInMemory _dbContext;
+    private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly IUserContext _userContext;
 
     /// <summary>
     /// Initializes a new instance of the UserService class.
     /// </summary>
-    /// <param name="dbContext">The database context used for user validation.</param>
+    /// <param name="userRepository">The repository used for user data access.</param>
     /// <param name="passwordHasher">The password hasher used for hashing user passwords.</param>
     /// <param name="userContext">The user context used for tracking the current user.</param>
-    public UserService(ArtBookingDbContextInMemory dbContext, IPasswordHasher<User> passwordHasher, IUserContext userContext)
+    public UserService(
+        IUserRepository userRepository,
+        IPasswordHasher<User> passwordHasher,
+        IUserContext userContext)
     {
-        _dbContext = dbContext;
+        _userRepository = userRepository;
         _passwordHasher = passwordHasher;
         _userContext = userContext;
     }
@@ -35,7 +38,7 @@ public class UserService : IUserService
     /// <returns>The user if found, null otherwise.</returns>
     public User? GetUser(string userName)
     {
-        return _dbContext.Users.FirstOrDefault(u => u.Username == userName);
+        return _userRepository.GetUserByUserName(userName);
     }
 
     /// <summary>
@@ -47,13 +50,13 @@ public class UserService : IUserService
     public User CreateUser(CreateUserDto createUserDto)
     {
         // Check if username already exists
-        if (_dbContext.Users.Any(u => u.Username == createUserDto.Username))
+        if (_userRepository.GetUserByUserName(createUserDto.Username) != null)
         {
             throw new Exception($"Username '{createUserDto.Username}' is already taken.");
         }
 
         // Check if email already exists
-        if (_dbContext.Users.Any(u => u.Email == createUserDto.Email))
+        if (_userRepository.GetUserByEmail(createUserDto.Email) != null)
         {
             throw new Exception($"Email '{createUserDto.Email}' is already registered.");
         }
@@ -76,9 +79,7 @@ public class UserService : IUserService
         // Hash the password
         user.PasswordHash = _passwordHasher.HashPassword(user, createUserDto.Password);
 
-        _dbContext.Users.Add(user);
-        _dbContext.SaveChanges();
-
+        _userRepository.Add(user);
         return user;
     }
 
@@ -88,6 +89,6 @@ public class UserService : IUserService
     /// <returns>True if there are users, false otherwise.</returns>
     public bool HasUsers()
     {
-        return _dbContext.Users.Any();
+        return _userRepository.HasUsers();
     }
 }
