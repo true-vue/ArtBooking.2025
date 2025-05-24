@@ -5,7 +5,10 @@ using Business.Model.Entities.Events.Enums;
 using Business.Application.Services.Users.Dtos;
 using Business.Application.Services.Users;
 using Business.Model.Entities.Users;
-using Storage.InMemory;
+using Business.Application.Services.Organizations;
+using Business.Application.Services.Events;
+using Business.Application.DTOs.Organizations;
+using Business.Application.DTOs.Events;
 
 namespace Business.Application.Storage;
 
@@ -14,11 +17,12 @@ public class ArtBookingDbSeeder
     public static void SeedNow(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<ArtBookingDbContextInMemory>();
+        var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+        var organizationService = scope.ServiceProvider.GetRequiredService<IArtOrganizationService>();
+        var eventService = scope.ServiceProvider.GetRequiredService<IArtEventService>();
 
-        if (!context.Users.Any())
+        if (!userService.HasUsers())
         {
-            var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
             userService.CreateUser(new CreateUserDto
             {
                 Username = "admin",
@@ -31,10 +35,9 @@ public class ArtBookingDbSeeder
         }
 
         // Check if data already exists to avoid duplicates
-        // For in memory database not necessary by for true database scenario is better to check.
-        if (!context.ArtOrganizations.Any())
+        if (!organizationService.HasOrganizations())
         {
-            var orgBagatela = new ArtOrganization
+            var orgBagatela = organizationService.CreateOrganization(new CreateArtOrganizationDto
             {
                 Name = "Teatr Bagatela",
                 Description = "Jeden z najbardziej znanych teatrów w Krakowie, działający od 1919 roku.",
@@ -47,14 +50,10 @@ public class ArtBookingDbSeeder
                 Town = "Kraków",
                 PostalCode = "31-128",
                 Country = "Polska",
-                LogoUrl = "https://bagatela.pl/wp-content/themes/bagatela/images/logo.svg",
-                CreatedAt = new DateTime(2024, 1, 1, 10, 0, 0),
-                CreatedById = 1,
-                UpdatedAt = new DateTime(2024, 1, 1, 10, 0, 0),
-                UpdatedById = 1
-            };
+                LogoUrl = "https://bagatela.pl/wp-content/themes/bagatela/images/logo.svg"
+            });
 
-            var orgMultikino = new ArtOrganization
+            var orgMultikino = organizationService.CreateOrganization(new CreateArtOrganizationDto
             {
                 Name = "Multikino Kraków",
                 Description = "Sieć kin oferująca szeroki repertuar filmowy, również premiery kinowe.",
@@ -67,14 +66,10 @@ public class ArtBookingDbSeeder
                 Town = "Kraków",
                 PostalCode = "31-416",
                 Country = "Polska",
-                LogoUrl = "https://multikino.pl/-/jssmedia/multikino/img/logo-multikino.svg",
-                CreatedAt = new DateTime(2024, 1, 2, 11, 0, 0),
-                CreatedById = 1,
-                UpdatedAt = new DateTime(2024, 1, 2, 11, 0, 0),
-                UpdatedById = 1
-            };
+                LogoUrl = "https://multikino.pl/-/jssmedia/multikino/img/logo-multikino.svg"
+            });
 
-            var orgMuzeumNarodowe = new ArtOrganization
+            var orgMuzeumNarodowe = organizationService.CreateOrganization(new CreateArtOrganizationDto
             {
                 Name = "Muzeum Narodowe w Krakowie",
                 Description = "Największe muzeum w Polsce, z bogatymi zbiorami sztuki polskiej i zagranicznej.",
@@ -87,14 +82,10 @@ public class ArtBookingDbSeeder
                 Town = "Kraków",
                 PostalCode = "30-062",
                 Country = "Polska",
-                LogoUrl = "https://logowik.com/content/uploads/images/muzeum-narodowe-w-krakowie-new2995.logowik.com.webp",
-                CreatedAt = new DateTime(2024, 1, 3, 12, 0, 0),
-                CreatedById = 1,
-                UpdatedAt = new DateTime(2024, 1, 3, 12, 0, 0),
-                UpdatedById = 1
-            };
+                LogoUrl = "https://logowik.com/content/uploads/images/muzeum-narodowe-w-krakowie-new2995.logowik.com.webp"
+            });
 
-            var orgMuzeumPowstania = new ArtOrganization
+            var orgMuzeumPowstania = organizationService.CreateOrganization(new CreateArtOrganizationDto
             {
                 Name = "Muzeum Powstania Warszawskiego",
                 Description = "Interaktywne muzeum poświęcone Powstaniu Warszawskiemu z 1944 roku.",
@@ -107,180 +98,111 @@ public class ArtBookingDbSeeder
                 Town = "Warszawa",
                 PostalCode = "00-844",
                 Country = "Polska",
-                LogoUrl = "https://www.1944.pl/img/logo-color.svg",
-                CreatedAt = new DateTime(2024, 1, 4, 13, 0, 0),
-                CreatedById = 1,
-                UpdatedAt = new DateTime(2024, 1, 4, 13, 0, 0),
-                UpdatedById = 1
-            };
+                LogoUrl = "https://www.1944.pl/img/logo-color.svg"
+            });
 
-            context.ArtOrganizations.AddRange(
-                orgBagatela,
-                orgMultikino,
-                orgMuzeumNarodowe,
-                orgMuzeumPowstania
-            );
-
-            orgBagatela.Events = new List<ArtEvent>
+            // Create events for Bagatela
+            eventService.CreateEvent(new CreateArtEventDto
             {
-                new ArtEvent
-                {
-                    Name = "Szalone nożyczki",
-                    Description = "Kultowa komedia kryminalna, w której widzowie stają się detektywami.",
-                    ArtOrganizationId = 1,
-                    Status = EventStatus.TicketSalesOpen,
-                    Category = EventCategory.Theater,
-                    ImageUrl = "https://bagatela.pl/wp-content/uploads/2023/11/szalone-nozyczki.jpg",
-                    CreatedAt = new DateTime(2024, 1, 5, 14, 0, 0),
-                    CreatedById = 1,
-                    UpdatedAt = new DateTime(2024, 1, 5, 14, 0, 0),
-                    UpdatedById = 1
-                },
-                new ArtEvent
-                {
-                    Name = "Pijacy",
-                    Description = "Spektakl na podstawie komedii Franciszka Bohomolca, ukazujący społeczne obyczaje XVIII wieku.",
-                    ArtOrganizationId = 1,
-                    Status = EventStatus.TicketSalesOpen,
-                    Category = EventCategory.Theater,
-                    ImageUrl = "https://bagatela.pl/wp-content/uploads/2023/11/pijacy.jpg",
-                    CreatedAt = new DateTime(2024, 1, 6, 15, 0, 0),
-                    CreatedById = 1,
-                    UpdatedAt = new DateTime(2024, 1, 6, 15, 0, 0),
-                    UpdatedById = 1
-                },
-                new ArtEvent
-                {
-                    Name = "Bajki dla niegrzecznych",
-                    Description = "Muzyczne przedstawienie oparte na opowieściach Heinricha Hoffmanna, pełne czarnego humoru.",
-                    ArtOrganizationId = 1,
-                    Status = EventStatus.Published,
-                    Category = EventCategory.Theater,
-                    ImageUrl = "https://bagatela.pl/wp-content/uploads/2023/11/bajki-dla-niegrzecznych.jpg",
-                    CreatedAt = new DateTime(2024, 1, 7, 16, 0, 0),
-                    CreatedById = 1,
-                    UpdatedAt = new DateTime(2024, 1, 7, 16, 0, 0),
-                    UpdatedById = 1
-                }
-            };
+                Name = "Szalone nożyczki",
+                Description = "Kultowa komedia kryminalna, w której widzowie stają się detektywami.",
+                Status = EventStatus.TicketSalesOpen,
+                Category = EventCategory.Theater,
+                ImageUrl = "https://bagatela.pl/wp-content/uploads/2023/11/szalone-nozyczki.jpg"
+            }, orgBagatela.ArtOrganizationId);
 
-            orgMultikino.Events = new List<ArtEvent>
+            eventService.CreateEvent(new CreateArtEventDto
             {
-                new ArtEvent
-                {
-                    Name = "Amator",
-                    Description = "Thriller z Ramim Malekiem w roli kryptologa CIA, który po stracie żony w zamachu terrorystycznym postanawia odnaleźć sprawców.",
-                    ArtOrganizationId = 2,
-                    Status = EventStatus.TicketSalesOpen,
-                    Category = EventCategory.Film,
-                    ImageUrl = "https://multikino.pl/media/cache/resolve/film_poster/uploads/media/default/0001/02/amator.jpg",
-                    CreatedAt = new DateTime(2024, 1, 8, 17, 0, 0),
-                    CreatedById = 1,
-                    UpdatedAt = new DateTime(2024, 1, 8, 17, 0, 0),
-                    UpdatedById = 1
-                },
-                new ArtEvent
-                {
-                    Name = "Kaiju No. 8: Mission Recon",
-                    Description = "Japoński film animowany opowiadający o walce z potężnymi potworami zagrażającymi ludzkości.",
-                    ArtOrganizationId = 2,
-                    Status = EventStatus.TicketSalesOpen,
-                    Category = EventCategory.Film,
-                    ImageUrl = "https://multikino.pl/media/cache/resolve/film_poster/uploads/media/default/0001/02/kaiju-no-8.jpg",
-                    CreatedAt = new DateTime(2024, 1, 9, 18, 0, 0),
-                    CreatedById = 1,
-                    UpdatedAt = new DateTime(2024, 1, 9, 18, 0, 0),
-                    UpdatedById = 1
-                },
-                new ArtEvent
-                {
-                    Name = "Surfer",
-                    Description = "Nadchodząca premiera filmu o pasji do surfingu i pokonywaniu własnych słabości.",
-                    ArtOrganizationId = 2,
-                    Status = EventStatus.Published,
-                    Category = EventCategory.Film,
-                    ImageUrl = "https://multikino.pl/media/cache/resolve/film_poster/uploads/media/default/0001/02/surfer.jpg",
-                    CreatedAt = new DateTime(2024, 1, 10, 19, 0, 0),
-                    CreatedById = 1,
-                    UpdatedAt = new DateTime(2024, 1, 10, 19, 0, 0),
-                    UpdatedById = 1
-                }
-            };
+                Name = "Pijacy",
+                Description = "Spektakl na podstawie komedii Franciszka Bohomolca, ukazujący społeczne obyczaje XVIII wieku.",
+                Status = EventStatus.TicketSalesOpen,
+                Category = EventCategory.Theater,
+                ImageUrl = "https://bagatela.pl/wp-content/uploads/2023/11/pijacy.jpg"
+            }, orgBagatela.ArtOrganizationId);
 
-            orgMuzeumNarodowe.Events = new List<ArtEvent>
+            eventService.CreateEvent(new CreateArtEventDto
             {
-                new ArtEvent
-                {
-                    Name = "Boznańska. Kameralnie",
-                    Description = "Wystawa poświęcona Oldze Boznańskiej, ukazująca jej życie i twórczość.",
-                    ArtOrganizationId = 3,
-                    Status = EventStatus.Published,
-                    Category = EventCategory.Exhibition,
-                    ImageUrl = "https://mnk.pl/media/cache/resolve/cover/uploads/media/default/0001/02/boznanska.jpg",
-                    CreatedAt = new DateTime(2024, 1, 11, 20, 0, 0),
-                    CreatedById = 1,
-                    UpdatedAt = new DateTime(2024, 1, 11, 20, 0, 0),
-                    UpdatedById = 1
-                },
-                new ArtEvent
-                {
-                    Name = "Łysogórski zwierzyniec",
-                    Description = "Ekspozycja prezentująca ceramikę ze Spółdzielni 'Kamionka' z Łysej Góry, ukazującą bogactwo fauny i flory.",
-                    ArtOrganizationId = 3,
-                    Status = EventStatus.Published,
-                    Category = EventCategory.Exhibition,
-                    ImageUrl = "https://mnk.pl/media/cache/resolve/cover/uploads/media/default/0001/02/lysogorski-zwierzyniec.jpg",
-                    CreatedAt = new DateTime(2024, 1, 12, 21, 0, 0),
-                    CreatedById = 1,
-                    UpdatedAt = new DateTime(2024, 1, 12, 21, 0, 0),
-                    UpdatedById = 1
-                },
-                new ArtEvent
-                {
-                    Name = "Królestwo roślin i zwierząt – opowieść i trudy poznania",
-                    Description = "Wystawa ukazująca relacje między człowiekiem a światem przyrody, poprzez sztukę i naukę.",
-                    ArtOrganizationId = 3,
-                    Status = EventStatus.Published,
-                    Category = EventCategory.Exhibition,
-                    ImageUrl = "https://mnk.pl/media/cache/resolve/cover/uploads/media/default/0001/02/krolestwo-roslin-i-zwierzat.jpg",
-                    CreatedAt = new DateTime(2024, 1, 13, 22, 0, 0),
-                    CreatedById = 1,
-                    UpdatedAt = new DateTime(2024, 1, 13, 22, 0, 0),
-                    UpdatedById = 1
-                }
-            };
+                Name = "Bajki dla niegrzecznych",
+                Description = "Muzyczne przedstawienie oparte na opowieściach Heinricha Hoffmanna, pełne czarnego humoru.",
+                Status = EventStatus.Published,
+                Category = EventCategory.Theater,
+                ImageUrl = "https://bagatela.pl/wp-content/uploads/2023/11/bajki-dla-niegrzecznych.jpg"
+            }, orgBagatela.ArtOrganizationId);
 
-            orgMuzeumPowstania.Events = new List<ArtEvent>
+            // Create events for Multikino
+            eventService.CreateEvent(new CreateArtEventDto
             {
-                new ArtEvent
-                {
-                    Name = "Rzeczywiste. 80 wyjątkowych przedmiotów z Powstania Warszawskiego",
-                    Description = "Wystawa prezentująca unikalne przedmioty z czasów Powstania Warszawskiego, ukazujące codzienne życie powstańców.",
-                    ArtOrganizationId = 4,
-                    Status = EventStatus.Published,
-                    Category = EventCategory.Exhibition,
-                    ImageUrl = "https://www.1944.pl/media/cache/resolve/cover/uploads/media/default/0001/02/rzeczywiste.jpg",
-                    CreatedAt = new DateTime(2024, 1, 14, 23, 0, 0),
-                    CreatedById = 1,
-                    UpdatedAt = new DateTime(2024, 1, 14, 23, 0, 0),
-                    UpdatedById = 1
-                },
-                new ArtEvent
-                {
-                    Name = "Wystawa stała",
-                    Description = "Stała ekspozycja muzeum, przenosząca zwiedzających w realia okupowanej Warszawy i czasów Powstania Warszawskiego z 1944 roku.",
-                    ArtOrganizationId = 4,
-                    Status = EventStatus.Published,
-                    Category = EventCategory.Exhibition,
-                    ImageUrl = "https://www.1944.pl/media/cache/resolve/cover/uploads/media/default/0001/02/wystawa-stala.jpg",
-                    CreatedAt = new DateTime(2024, 1, 15, 0, 0, 0),
-                    CreatedById = 1,
-                    UpdatedAt = new DateTime(2024, 1, 15, 0, 0, 0),
-                    UpdatedById = 1
-                }
-            };
+                Name = "Amator",
+                Description = "Thriller z Ramim Malekiem w roli kryptologa CIA, który po stracie żony w zamachu terrorystycznym postanawia odnaleźć sprawców.",
+                Status = EventStatus.TicketSalesOpen,
+                Category = EventCategory.Film,
+                ImageUrl = "https://multikino.pl/media/cache/resolve/film_poster/uploads/media/default/0001/02/amator.jpg"
+            }, orgMultikino.ArtOrganizationId);
 
-            context.SaveChanges();
+            eventService.CreateEvent(new CreateArtEventDto
+            {
+                Name = "Kaiju No. 8: Mission Recon",
+                Description = "Japoński film animowany opowiadający o walce z potężnymi potworami zagrażającymi ludzkości.",
+                Status = EventStatus.TicketSalesOpen,
+                Category = EventCategory.Film,
+                ImageUrl = "https://multikino.pl/media/cache/resolve/film_poster/uploads/media/default/0001/02/kaiju-no-8.jpg"
+            }, orgMultikino.ArtOrganizationId);
+
+            eventService.CreateEvent(new CreateArtEventDto
+            {
+                Name = "Surfer",
+                Description = "Nadchodząca premiera filmu o pasji do surfingu i pokonywaniu własnych słabości.",
+                Status = EventStatus.Published,
+                Category = EventCategory.Film,
+                ImageUrl = "https://multikino.pl/media/cache/resolve/film_poster/uploads/media/default/0001/02/surfer.jpg"
+            }, orgMultikino.ArtOrganizationId);
+
+            // Create events for Muzeum Narodowe
+            eventService.CreateEvent(new CreateArtEventDto
+            {
+                Name = "Boznańska. Kameralnie",
+                Description = "Wystawa poświęcona Oldze Boznańskiej, ukazująca jej życie i twórczość.",
+                Status = EventStatus.Published,
+                Category = EventCategory.Exhibition,
+                ImageUrl = "https://mnk.pl/media/cache/resolve/cover/uploads/media/default/0001/02/boznanska.jpg"
+            }, orgMuzeumNarodowe.ArtOrganizationId);
+
+            eventService.CreateEvent(new CreateArtEventDto
+            {
+                Name = "Łysogórski zwierzyniec",
+                Description = "Ekspozycja prezentująca ceramikę ze Spółdzielni 'Kamionka' z Łysej Góry, ukazującą bogactwo fauny i flory.",
+                Status = EventStatus.Published,
+                Category = EventCategory.Exhibition,
+                ImageUrl = "https://mnk.pl/media/cache/resolve/cover/uploads/media/default/0001/02/lysogorski-zwierzyniec.jpg"
+            }, orgMuzeumNarodowe.ArtOrganizationId);
+
+            eventService.CreateEvent(new CreateArtEventDto
+            {
+                Name = "Królestwo roślin i zwierząt – opowieść i trudy poznania",
+                Description = "Wystawa ukazująca relacje między człowiekiem a światem przyrody, poprzez sztukę i naukę.",
+                Status = EventStatus.Published,
+                Category = EventCategory.Exhibition,
+                ImageUrl = "https://mnk.pl/media/cache/resolve/cover/uploads/media/default/0001/02/krolestwo-roslin-i-zwierzat.jpg"
+            }, orgMuzeumNarodowe.ArtOrganizationId);
+
+            // Create events for Muzeum Powstania
+            eventService.CreateEvent(new CreateArtEventDto
+            {
+                Name = "Rzeczywiste. 80 wyjątkowych przedmiotów z Powstania Warszawskiego",
+                Description = "Wystawa prezentująca unikalne przedmioty z czasów Powstania Warszawskiego, ukazujące codzienne życie powstańców.",
+                Status = EventStatus.Published,
+                Category = EventCategory.Exhibition,
+                ImageUrl = "https://www.1944.pl/media/cache/resolve/cover/uploads/media/default/0001/02/rzeczywiste.jpg"
+            }, orgMuzeumPowstania.ArtOrganizationId);
+
+            eventService.CreateEvent(new CreateArtEventDto
+            {
+                Name = "Wystawa stała",
+                Description = "Stała ekspozycja muzeum, przenosząca zwiedzających w realia okupowanej Warszawy i czasów Powstania Warszawskiego z 1944 roku.",
+                Status = EventStatus.Published,
+                Category = EventCategory.Exhibition,
+                ImageUrl = "https://www.1944.pl/media/cache/resolve/cover/uploads/media/default/0001/02/wystawa-stala.jpg"
+            }, orgMuzeumPowstania.ArtOrganizationId);
         }
     }
 }

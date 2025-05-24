@@ -58,7 +58,10 @@ namespace Storage.MsSql.Repositories
                 query = query.Where(o => o.Kind == organizationKind.Value);
 
             // Apply sorting
-            query = ApplySorting(query, sortBy, sortAscending);
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                query = ApplySorting(query, sortBy, sortAscending);
+            }
 
             return query.AsPagedList(pageNumber, pageSize);
         }

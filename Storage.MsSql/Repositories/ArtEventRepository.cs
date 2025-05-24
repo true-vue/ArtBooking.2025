@@ -58,7 +58,10 @@ public class ArtEventRepository : IArtEventRepository
             query = query.Where(e => e.ArtOrganizationId == organizationIdFilter.Value);
 
         // Apply sorting
-        query = ApplySorting(query, sortBy, sortAscending);
+        if (!string.IsNullOrEmpty(sortBy))
+        {
+            query = ApplySorting(query, sortBy, sortAscending);
+        }
 
         return query.AsPagedList(pageNumber, pageSize);
     }
