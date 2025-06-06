@@ -73,8 +73,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Configure Entity Framework Core with InMemory database
 builder.Services.AddArtBookingStorageInMemory();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("Database connection string is not configured");
+}
+
 // Configure Entity Framework Core with MsSql database
-builder.Services.AddArtBookingStorageMsSql(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddArtBookingStorageMsSql(connectionString);
 
 // Register application services
 builder.Services.AddArtBookingBusinessLayer();
@@ -89,11 +95,11 @@ var app = builder.Build();
 ArtBookingDbSeeder.SeedNow(app.Services);
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// if (app.Environment.IsDevelopment())
+// {
+app.UseSwagger();
+app.UseSwaggerUI();
+// }
 
 app.UseHttpsRedirection();
 
