@@ -22,7 +22,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public ActionResult Login([FromBody] LoginRequest request)
+    public ActionResult<LoginResponse> Login([FromBody] LoginRequest request)
     {
         var loginResult = _userIdentityService.Login(request);
         // TODO: Add proper user authentication logic here
@@ -58,10 +58,11 @@ public class AuthController : ControllerBase
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return Ok(new
+            return Ok(new LoginResponse
             {
                 Token = tokenString,
-                ValidUntil = expirationTime
+                ValidUntil = expirationTime,
+                User = loginResult.User
             });
         }
 
